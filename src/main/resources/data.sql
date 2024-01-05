@@ -1,0 +1,2 @@
+INSERT INTO employee (employee_id, name, surname, code, department) VALUES (1, 'Rino', 'Campa', 123, 'IT');
+INSERT INTO employee (employee_id, name, surname, code, department) VALUES (2, 'Rollo', 'Ape', 234, 'Finance');
