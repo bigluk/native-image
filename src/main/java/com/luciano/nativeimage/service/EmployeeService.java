@@ -1,7 +1,7 @@
 package com.luciano.nativeimage.service;
 
+import java.lang.reflect.Field;
 import java.util.Optional;
-
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -31,7 +31,7 @@ public class EmployeeService {
 
         throwExceptionIfEmployeeIsAlreadyPresentOnTable(employeeToInsert);
 
-        EmployeeDto employeeSaved = performInsertingNewEmployeeOperation(employeeToInsert);
+        EmployeeDto employeeSaved = performInsertEmployeeOperation(employeeToInsert);
 
         return employeeSaved;
 
@@ -59,7 +59,7 @@ public class EmployeeService {
     }
 
 
-    private EmployeeDto performInsertingNewEmployeeOperation (EmployeeDto employeeToInsert) {
+    private EmployeeDto performInsertEmployeeOperation (EmployeeDto employeeToInsert) {
         
         Employee employeeToSave = mapper.map(employeeToInsert, Employee.class);
 
@@ -67,7 +67,7 @@ public class EmployeeService {
 
         EmployeeDto employeeSavedDto = mapper.map(employeeSaved, EmployeeDto.class);
         
-        log.info("Added new employee {} to db table", employeeToInsert);
+        log.info("Added employee {} to db table", employeeToInsert);
 
         return employeeSavedDto;
     
@@ -92,7 +92,7 @@ public class EmployeeService {
 
     private void throwExceptionIfEmployeeIdIsAnInvalidField (Long employeeId) throws EmployeeException {
 
-        if (employeeId == null || employeeId <= 0) {
+        if (employeeId <= 0) {
             log.error("Cannot start retreieve operation cause employee id is: {}", employeeId);
             throw new EmployeeException(HttpStatus.BAD_REQUEST, 
                                         EmployeeErrorCode.INVALID_FIELDS, 
@@ -121,8 +121,48 @@ public class EmployeeService {
 
 
 
-    public EmployeeDto updateEmployeeDto () {
-        return null;
+    public EmployeeDto updateEmployeeDto (Long employeeId, EmployeeDto employeeFieldsToUpdate) throws EmployeeException, IllegalArgumentException, IllegalAccessException {
+
+        log.info("Starting update operation for the employee with employeeId: {}", employeeId);
+
+        // retrieve employee
+        EmployeeDto employeeToUpdate = retrieveEmployeeDto(employeeId);
+
+        // prepare dto to update
+        // use reflection to create the new employee updated (null fields excluded)
+        EmployeeDto employeeWithNewFields = createEmployeeWithNewFields (employeeToUpdate, employeeFieldsToUpdate);
+
+        // check if the new element already exist
+        throwExceptionIfEmployeeIsAlreadyPresentOnTable(employeeWithNewFields);
+
+        // perform update on db
+        EmployeeDto employeeDtoUpdated = performInsertEmployeeOperation(employeeToUpdate);
+
+        return employeeDtoUpdated;
+    }
+
+
+    private EmployeeDto createEmployeeWithNewFields (EmployeeDto employeeToUpdate, EmployeeDto employeeFieldsToUpdate ) throws IllegalArgumentException, IllegalAccessException {
+        
+        // use reflection to select not null fields to update
+        Field[] declaredFields = EmployeeDto.class.getDeclaredFields();
+
+        for (Field field : declaredFields) {
+            
+            field.setAccessible(true);
+
+            Object fieldValue = field.get(employeeFieldsToUpdate);
+
+            if (fieldValue != null && !field.getName().equalsIgnoreCase("Id")) {
+                
+                field.set(employeeToUpdate, fieldValue);
+
+            }
+
+        }
+
+        return employeeToUpdate;
+
     }
 
 

@@ -43,9 +43,9 @@ public class EmployeeController {
 
 
     @GetMapping(path = "/retrieve-employee")
-    public ResponseEntity<EmployeeDto> getEmployee(@RequestParam(name = "employeeId") Long employeedId) throws EmployeeException {
+    public ResponseEntity<EmployeeDto> getEmployee(@RequestParam(name = "employeeId") @NotNull Long employeedId) throws EmployeeException {
         
-        log.info("Received new request to retrieve new employee with the id: {}", employeedId);
+        log.info("Received new request to retrieve employee with the id: {}", employeedId);
 
         EmployeeDto employeeDtoRetrieved = employeeService.retrieveEmployeeDto(employeedId);
 
@@ -56,11 +56,11 @@ public class EmployeeController {
 
 
     @PutMapping(value = "/update-employee")
-    public ResponseEntity<EmployeeDto> updateEmployee(@RequestParam(name = "employeeId") Long employeeId, @RequestBody EmployeeDto entity) {
+    public ResponseEntity<EmployeeDto> updateEmployee(@RequestParam(name = "employeeId") @NotNull Long employeeId, @RequestBody EmployeeDto employeeFiledsToUpdate) throws IllegalArgumentException, IllegalAccessException, EmployeeException {
         
-        log.info("Received new request to update employee with the id: {}", employeeId);
+        log.info("Received new request to update the fields {} of the employee with the id: {}", employeeFiledsToUpdate , employeeId);
 
-        EmployeeDto employeeDtoUpdated = employeeService.updateEmployeeDto();
+        EmployeeDto employeeDtoUpdated = employeeService.updateEmployeeDto(employeeId, employeeFiledsToUpdate);
         
         return new ResponseEntity<>(employeeDtoUpdated, HttpStatus.OK);
     }
