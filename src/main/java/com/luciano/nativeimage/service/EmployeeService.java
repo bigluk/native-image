@@ -67,6 +67,8 @@ public class EmployeeService {
 
         EmployeeDto employeeSavedDto = mapper.map(employeeSaved, EmployeeDto.class);
         
+        log.info("Added new employee {} to db table", employeeToInsert);
+
         return employeeSavedDto;
     
     }
