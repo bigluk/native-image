@@ -12,12 +12,12 @@ import com.luciano.nativeimage.dto.EmployeeDto;
 import com.luciano.nativeimage.dto.EmployeeDto.Create;
 import com.luciano.nativeimage.exception.customException.EmployeeException;
 import com.luciano.nativeimage.service.EmployeeService;
+import jakarta.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 
 
 @Slf4j
@@ -42,7 +42,7 @@ public class EmployeeController {
 
 
 
-    @GetMapping(path = "/employee")
+    @GetMapping(path = "/retrieve-employee")
     public ResponseEntity<EmployeeDto> getEmployee(@RequestParam(name = "employeeId") Long employeedId) throws EmployeeException {
         
         log.info("Received new request to retrieve new employee with the id: {}", employeedId);
@@ -55,18 +55,26 @@ public class EmployeeController {
     
 
 
-    @PutMapping(value = "/{employeeId}")
-    public Object updateEmployee(@PathVariable String id, @RequestBody Object entity) {
-        //TODO: process PUT request
+    @PutMapping(value = "/update-employee")
+    public ResponseEntity<EmployeeDto> updateEmployee(@RequestParam(name = "employeeId") Long employeeId, @RequestBody EmployeeDto entity) {
         
-        return entity;
+        log.info("Received new request to update employee with the id: {}", employeeId);
+
+        EmployeeDto employeeDtoUpdated = employeeService.updateEmployeeDto();
+        
+        return new ResponseEntity<>(employeeDtoUpdated, HttpStatus.OK);
     }
 
 
 
-    @DeleteMapping(value = "/{employeeId}")
-    public Object deleteEmployee () {
-        return null;
+    @DeleteMapping(value = "/delete-employee")
+    public Object deleteEmployee (@RequestParam(name = "employeeId") @NotNull Long employeeId) {
+        
+        log.info("Received new request to delete employee with the id: {}", employeeId);
+
+        employeeService.deleteEmployee(employeeId);
+        
+        return new ResponseEntity<>(HttpStatus.OK);
 
     }
 

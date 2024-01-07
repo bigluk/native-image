@@ -121,5 +121,20 @@ public class EmployeeService {
 
 
 
+    public EmployeeDto updateEmployeeDto () {
+        return null;
+    }
+
+
+
+    public void deleteEmployee (Long employeeId) {
+
+        log.info("Starting delete operation for the employee with Id: {}", employeeId);
+
+        employeeRepository.deleteById(employeeId);
+
+    }
+
+
 
 }
