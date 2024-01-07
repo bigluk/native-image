@@ -1,2 +1,2 @@
-INSERT INTO employee (employee_id, name, surname, code, department) VALUES (1, 'Rino', 'Campa', 123, 'IT');
-INSERT INTO employee (employee_id, name, surname, code, department) VALUES (2, 'Rollo', 'Ape', 234, 'Finance');
+INSERT INTO employee (name, surname, identification_number, department) VALUES ('Rino', 'Campa', 123, 'IT');
+INSERT INTO employee (name, surname, identification_number, department) VALUES ('Rollo', 'Ape', 234, 'Finance');
