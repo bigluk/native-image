@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.luciano.nativeimage.dto.EmployeeDto;
 import com.luciano.nativeimage.dto.EmployeeDto.Create;
 import com.luciano.nativeimage.service.EmployeeService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 
+@Slf4j
 @RestController
 @RequestMapping(value = "/employees/v1/crud")
 public class EmployeeController {
@@ -29,8 +31,8 @@ public class EmployeeController {
     @PostMapping(path = "/new-employee")
     public ResponseEntity<EmployeeDto> addEmployee(@RequestBody @Validated(Create.class) EmployeeDto employee) throws Exception {
 
-        System.out.println(employee);
-
+        log.error("Received new request to insert new employee: {}", employee);
+        
         EmployeeDto employeeDtoSaved = employeeService.addNewEmployee(employee);
 
         return new ResponseEntity<>(employeeDtoSaved, HttpStatus.CREATED);
@@ -42,6 +44,8 @@ public class EmployeeController {
     @GetMapping(value = "/{employeeId}")
     public Object getEmployee(@RequestParam String param) {
         
+
+
         // call some service   
         return new Object();
     
