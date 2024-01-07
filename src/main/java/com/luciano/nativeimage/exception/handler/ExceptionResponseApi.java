@@ -1,9 +1,7 @@
 package com.luciano.nativeimage.exception.handler;
 
 import org.springframework.http.HttpStatus;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
-
 import lombok.Builder;
 import lombok.Data;
 

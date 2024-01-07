@@ -2,7 +2,6 @@ package com.luciano.nativeimage.repository;
 
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
-
 import com.luciano.nativeimage.entity.Employee;
 
 
