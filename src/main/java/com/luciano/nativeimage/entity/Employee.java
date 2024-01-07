@@ -2,23 +2,28 @@ package com.luciano.nativeimage.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import lombok.Data;
+
 
 @Entity
+@Data
 public class Employee {
     
     @Id
-    @Column(name = "employee_id")
-    private Long employeeId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long Id;
 
     @Column(name = "name")
-    private String employeeName;
+    private String name;
 
     @Column(name = "surname")
-    private String employeeSurname;
+    private String surname;
 
-    @Column(name = "code")
-    private String employeeCode;
+    @Column(name = "identification_number")
+    private Long identificationNumber;
 
     @Column(name = "department")
     private String department;
