@@ -1,5 +1,7 @@
 package com.luciano.nativeimage.service;
 
+import java.util.Optional;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -36,7 +38,6 @@ public class EmployeeService {
     }
 
 
-
     private void throwExceptionIfEmployeeIsAlreadyPresentOnTable (EmployeeDto employeeToInsert) throws EmployeeException {
 
         log.info("Check if the employee {} is already present on employee table", employeeToInsert);
@@ -58,7 +59,6 @@ public class EmployeeService {
     }
 
 
-
     private EmployeeDto performInsertingNewEmployeeOperation (EmployeeDto employeeToInsert) {
         
         Employee employeeToSave = mapper.map(employeeToInsert, Employee.class);
@@ -73,6 +73,51 @@ public class EmployeeService {
     
     }
 
+
+
+    public EmployeeDto retrieveEmployeeDto (Long employeeId) throws EmployeeException {
+
+        throwExceptionIfEmployeeIdIsAnInvalidField(employeeId);
+
+        log.info("Starting retrieve operation for the employee with employee id: {}", employeeId);
+
+        EmployeeDto employeeDtoRetrieved = performRetrieveOperation(employeeId);
+
+        log.info("Retrieved employee {}", employeeDtoRetrieved);
+
+        return employeeDtoRetrieved;
+
+    }
+
+
+    private void throwExceptionIfEmployeeIdIsAnInvalidField (Long employeeId) throws EmployeeException {
+
+        if (employeeId == null || employeeId <= 0) {
+            log.error("Cannot start retreieve operation cause employee id is: {}", employeeId);
+            throw new EmployeeException(HttpStatus.BAD_REQUEST, 
+                                        EmployeeErrorCode.INVALID_FIELDS, 
+                                        "Employee id with value " + employeeId + " is invalid.");
+        }
+
+    }
+
+
+    private EmployeeDto performRetrieveOperation (Long employeeId) throws EmployeeException {
+
+        Optional<Employee> employeeRetrieved = employeeRepository.findById(employeeId);
+
+        if (!employeeRetrieved.isPresent()) {
+            log.error("No Employee with employee id " + employeeId + " found.");
+            throw new EmployeeException(HttpStatus.NOT_FOUND, 
+                                        EmployeeErrorCode.EMPLOYEE_NOT_FOUND, 
+                                        "No Employee with employee id " + employeeId + " found.");
+        }
+
+        EmployeeDto employeeDtoRetrieved = mapper.map(employeeRetrieved, EmployeeDto.class);
+        
+        return employeeDtoRetrieved;
+
+    }
 
 
 

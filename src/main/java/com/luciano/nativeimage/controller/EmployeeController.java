@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.luciano.nativeimage.dto.EmployeeDto;
 import com.luciano.nativeimage.dto.EmployeeDto.Create;
+import com.luciano.nativeimage.exception.customException.EmployeeException;
 import com.luciano.nativeimage.service.EmployeeService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -31,7 +32,7 @@ public class EmployeeController {
     @PostMapping(path = "/new-employee")
     public ResponseEntity<EmployeeDto> addEmployee(@RequestBody @Validated(Create.class) EmployeeDto employee) throws Exception {
 
-        log.error("Received new request to insert new employee: {}", employee);
+        log.info("Received new request to insert new employee: {}", employee);
         
         EmployeeDto employeeDtoSaved = employeeService.addNewEmployee(employee);
 
@@ -41,13 +42,14 @@ public class EmployeeController {
 
 
 
-    @GetMapping(value = "/{employeeId}")
-    public Object getEmployee(@RequestParam String param) {
+    @GetMapping(path = "/employee")
+    public ResponseEntity<EmployeeDto> getEmployee(@RequestParam(name = "employeeId") Long employeedId) throws EmployeeException {
         
+        log.info("Received new request to retrieve new employee with the id: {}", employeedId);
 
+        EmployeeDto employeeDtoRetrieved = employeeService.retrieveEmployeeDto(employeedId);
 
-        // call some service   
-        return new Object();
+        return new ResponseEntity<>(employeeDtoRetrieved, HttpStatus.OK);
     
     }
     

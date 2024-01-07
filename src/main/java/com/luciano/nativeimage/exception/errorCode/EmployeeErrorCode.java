@@ -10,6 +10,8 @@ public enum EmployeeErrorCode {
 
     EMPLOYEE_ALREADY_PRESENT,
 
+    EMPLOYEE_NOT_FOUND,
+
     FAILED_TO_SAVE_EMPLOYEE;
 
 }

@@ -68,7 +68,7 @@
                 <configuration>
                     <buildArgs>
                         <buildArg>--enable-monitoring=heapdump,jvmstat</buildArg>
-                        <buildArg>--initialize-at-build-time=com.luciano.nativeimage,org.springframework.cglib.core.AbstractClassGenerator,org.springframework.cglib.core.ReflectUtils</buildArg>
+                        <!--<buildArg>initialize-at-build-time=com.luciano.nativeimage,org.springframework.cglib.core.AbstractClassGenerator,org.springframework.cglib.core.ReflectUtils</buildArg>-->
                     </buildArgs>
                 </configuration>
 			</plugin>
