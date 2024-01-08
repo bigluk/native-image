@@ -9,6 +9,7 @@ import lombok.Data;
 public class EmployeeDto {
     
     @Null(groups = Create.class, message = "Id must be null for new employee")
+    @NotNull(groups = Update.class, message = "Id must not be null for update operation")
     private Long Id;
 
     @NotNull(groups = Create.class, message = "Name cannot be null for new employee")
@@ -25,5 +26,8 @@ public class EmployeeDto {
 
 
     public interface Create {}
+
+    public interface Update {}
+    
 
 }
