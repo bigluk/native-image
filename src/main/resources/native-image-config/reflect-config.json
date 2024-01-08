@@ -1,0 +1,10 @@
+[
+    {
+    "name":"com.luciano.nativeimage.utils.StringCapitalizer",
+    "methods":[{"name":"capitalize","parameterTypes":["com.luciano.nativeimage.dto.EmployeeDto"] }]
+    },
+    {
+    "name":"com.luciano.nativeimage.utils.StringLowerizer",
+    "methods":[{"name":"lowerize","parameterTypes":["com.luciano.nativeimage.dto.EmployeeDto"] }]
+    }
+]
