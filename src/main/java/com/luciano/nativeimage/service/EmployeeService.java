@@ -1,6 +1,8 @@
 package com.luciano.nativeimage.service;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Optional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +13,9 @@ import com.luciano.nativeimage.entity.Employee;
 import com.luciano.nativeimage.exception.customException.EmployeeException;
 import com.luciano.nativeimage.exception.errorCode.EmployeeErrorCode;
 import com.luciano.nativeimage.repository.EmployeeRepository;
+import com.luciano.nativeimage.utils.StringLowerizer;
+
+import jakarta.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
 
 
@@ -53,7 +58,7 @@ public class EmployeeService {
             throw new EmployeeException(HttpStatus.CONFLICT, EmployeeErrorCode.EMPLOYEE_ALREADY_PRESENT, 
                                         "Employee with id number " + employeeToInsert.getIdentificationNumber() 
                                         + " and department " + employeeToInsert.getDepartment() 
-                                        + " is already present in employee table", null);
+                                        + " is already present in employee table");
         }
 
     }
@@ -121,28 +126,45 @@ public class EmployeeService {
 
 
 
-    public EmployeeDto updateEmployeeDto (Long employeeId, EmployeeDto employeeFieldsToUpdate) throws EmployeeException, IllegalArgumentException, IllegalAccessException {
+    public EmployeeDto updateEmployeeDto (EmployeeDto employeeFieldsToUpdate) throws EmployeeException, IllegalArgumentException, IllegalAccessException {
 
-        log.info("Starting update operation for the employee with employeeId: {}", employeeId);
+        log.info("Starting update operation for the employee with employeeId: {}", employeeFieldsToUpdate.getId());
 
-        // retrieve employee
-        EmployeeDto employeeToUpdate = retrieveEmployeeDto(employeeId);
 
-        // prepare dto to update
+        throwExceptionIfEmployeeNotExist(employeeFieldsToUpdate.getId());
+        //EmployeeDto employeeToUpdate = retrieveEmployeeDto(employeeId);
+
         // use reflection to create the new employee updated (null fields excluded)
-        EmployeeDto employeeWithNewFields = createEmployeeWithNewFields (employeeToUpdate, employeeFieldsToUpdate);
+        //EmployeeDto employeeWithNewFields = createEmployeeWithNewFields (employeeToUpdate, employeeFieldsToUpdate);
 
-        // check if the new element already exist
-        throwExceptionIfEmployeeIsAlreadyPresentOnTable(employeeWithNewFields);
+        //throwExceptionIfEmployeeIsAlreadyPresentOnTable(employeeWithNewFields);
 
-        // perform update on db
-        EmployeeDto employeeDtoUpdated = performInsertEmployeeOperation(employeeToUpdate);
+        EmployeeDto employeeDtoUpdated = performInsertEmployeeOperation(employeeFieldsToUpdate);
 
         return employeeDtoUpdated;
     }
 
 
-    private EmployeeDto createEmployeeWithNewFields (EmployeeDto employeeToUpdate, EmployeeDto employeeFieldsToUpdate ) throws IllegalArgumentException, IllegalAccessException {
+    private void throwExceptionIfEmployeeNotExist (Long employeeId) throws EmployeeException {
+
+        log.info("Check if the employee {} is already present on employee table", employeeId);
+
+        boolean employeeIsAlreadyPresent = 
+                        employeeRepository.existsById(employeeId);
+
+        if (!employeeIsAlreadyPresent) {
+            
+            log.error("Employee with employeeId {} is not present in employee table", employeeId);
+            
+            throw new EmployeeException(HttpStatus.CONFLICT, EmployeeErrorCode.EMPLOYEE_NOT_FOUND, 
+                                        "Employee with id number " + employeeId
+                                        + " is not present in employee table");
+        }
+
+
+    }
+
+    /*private EmployeeDto createEmployeeWithNewFields (EmployeeDto employeeToUpdate, EmployeeDto employeeFieldsToUpdate ) throws IllegalArgumentException, IllegalAccessException {
         
         // use reflection to select not null fields to update
         Field[] declaredFields = EmployeeDto.class.getDeclaredFields();
@@ -163,7 +185,7 @@ public class EmployeeService {
 
         return employeeToUpdate;
 
-    }
+    }*/
 
 
 
@@ -172,6 +194,45 @@ public class EmployeeService {
         log.info("Starting delete operation for the employee with Id: {}", employeeId);
 
         employeeRepository.deleteById(employeeId);
+
+    }
+
+
+
+    public EmployeeDto refactorEmployeeDtoDetails(Long employeeId, String classOfRefactor, String typeOfRefactor) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, ClassNotFoundException, EmployeeException {
+        
+        log.info("Starting refactor operation for the employee with Id: {}", employeeId);
+
+        checkClassAndTypeOfRefactorValidity(classOfRefactor, typeOfRefactor);
+
+        EmployeeDto employeeDtoToRefactor = performRetrieveOperation(employeeId);
+
+        Class<?> clazz = Class.forName("com.luciano.nativeimage.utils."+classOfRefactor);
+        Method method = clazz.getDeclaredMethod(typeOfRefactor, EmployeeDto.class);
+        method.invoke(null, employeeDtoToRefactor);
+        
+        EmployeeDto employeeDtoRefactored = performInsertEmployeeOperation(employeeDtoToRefactor);
+
+        return employeeDtoRefactored;
+    
+    }
+
+
+    private void checkClassAndTypeOfRefactorValidity (String classOfRefactor, String typeOfRefactor) throws EmployeeException {
+
+        if (classOfRefactor == null || classOfRefactor.isBlank() || classOfRefactor.isEmpty() 
+            || !(classOfRefactor.equals("StringCapitalizer") || classOfRefactor.equals("StringLowerizer"))) {
+            
+            log.error("Action not performed cause classOfRefactor is: {}", classOfRefactor);
+            throw new EmployeeException(HttpStatus.BAD_REQUEST, EmployeeErrorCode.ACTION_NOT_SUPPORTED, classOfRefactor +  " not supported");    
+        }
+
+        if (typeOfRefactor == null || typeOfRefactor.isBlank() || typeOfRefactor.isEmpty() 
+            || !(typeOfRefactor.equals("capitalize") || typeOfRefactor.equals("lowerize"))) {
+            
+            log.error("Action not performed cause typeOfRefactor is: {}", typeOfRefactor);
+            throw new EmployeeException(HttpStatus.BAD_REQUEST, EmployeeErrorCode.ACTION_NOT_SUPPORTED, typeOfRefactor +  " not supported");    
+        }
 
     }
 

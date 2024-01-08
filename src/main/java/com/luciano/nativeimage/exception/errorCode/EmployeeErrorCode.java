@@ -12,6 +12,8 @@ public enum EmployeeErrorCode {
 
     EMPLOYEE_NOT_FOUND,
 
+    ACTION_NOT_SUPPORTED,
+
     FAILED_TO_SAVE_EMPLOYEE;
 
 }

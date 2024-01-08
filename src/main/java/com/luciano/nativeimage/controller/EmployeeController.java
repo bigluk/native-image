@@ -1,5 +1,6 @@
 package com.luciano.nativeimage.controller;
 
+import java.lang.reflect.InvocationTargetException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.luciano.nativeimage.dto.EmployeeDto;
 import com.luciano.nativeimage.dto.EmployeeDto.Create;
+import com.luciano.nativeimage.dto.EmployeeDto.Update;
 import com.luciano.nativeimage.exception.customException.EmployeeException;
 import com.luciano.nativeimage.service.EmployeeService;
 import jakarta.validation.constraints.NotNull;
@@ -56,11 +58,11 @@ public class EmployeeController {
 
 
     @PutMapping(value = "/update-employee")
-    public ResponseEntity<EmployeeDto> updateEmployee(@RequestParam(name = "employeeId") @NotNull Long employeeId, @RequestBody EmployeeDto employeeFiledsToUpdate) throws IllegalArgumentException, IllegalAccessException, EmployeeException {
+    public ResponseEntity<EmployeeDto> updateEmployee(@RequestBody @Validated(Update.class) EmployeeDto employeeFiledsToUpdate) throws IllegalArgumentException, IllegalAccessException, EmployeeException {
         
-        log.info("Received new request to update the fields {} of the employee with the id: {}", employeeFiledsToUpdate , employeeId);
+        log.info("Received new request to update the fields {} of the employee", employeeFiledsToUpdate);
 
-        EmployeeDto employeeDtoUpdated = employeeService.updateEmployeeDto(employeeId, employeeFiledsToUpdate);
+        EmployeeDto employeeDtoUpdated = employeeService.updateEmployeeDto(employeeFiledsToUpdate);
         
         return new ResponseEntity<>(employeeDtoUpdated, HttpStatus.OK);
     }
@@ -77,6 +79,23 @@ public class EmployeeController {
         return new ResponseEntity<>(HttpStatus.OK);
 
     }
+
+
+
+    @PutMapping(value = "/refactor-employee-detail")
+    public ResponseEntity<EmployeeDto> refactorEmployeeDetail(@RequestParam(name = "employeeId") @NotNull Long employeeId, 
+                                                              @RequestParam(name = "classOfRefactor") @NotNull String classOfRefactor,
+                                                              @RequestParam(name = "typeOfRefactor") @NotNull String typeOfRefactor) throws IllegalArgumentException, IllegalAccessException, EmployeeException, InvocationTargetException, NoSuchMethodException, SecurityException, ClassNotFoundException {
+        
+        log.info("Received new request to refactor ({}) details of the employee with the id: {}", typeOfRefactor , employeeId);
+
+        EmployeeDto employeeDtoRefactored = employeeService.refactorEmployeeDtoDetails(employeeId, classOfRefactor, typeOfRefactor);
+        
+        return new ResponseEntity<>(employeeDtoRefactored, HttpStatus.OK);
+    
+    }
+
+
 
 
 }
