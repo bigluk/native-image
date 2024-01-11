@@ -1,6 +1,5 @@
 package com.luciano.nativeimage.service;
 
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Optional;
@@ -13,9 +12,6 @@ import com.luciano.nativeimage.entity.Employee;
 import com.luciano.nativeimage.exception.customException.EmployeeException;
 import com.luciano.nativeimage.exception.errorCode.EmployeeErrorCode;
 import com.luciano.nativeimage.repository.EmployeeRepository;
-import com.luciano.nativeimage.utils.StringLowerizer;
-
-import jakarta.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
 
 
@@ -130,18 +126,12 @@ public class EmployeeService {
 
         log.info("Starting update operation for the employee with employeeId: {}", employeeFieldsToUpdate.getId());
 
-
         throwExceptionIfEmployeeNotExist(employeeFieldsToUpdate.getId());
-        //EmployeeDto employeeToUpdate = retrieveEmployeeDto(employeeId);
-
-        // use reflection to create the new employee updated (null fields excluded)
-        //EmployeeDto employeeWithNewFields = createEmployeeWithNewFields (employeeToUpdate, employeeFieldsToUpdate);
-
-        //throwExceptionIfEmployeeIsAlreadyPresentOnTable(employeeWithNewFields);
 
         EmployeeDto employeeDtoUpdated = performInsertEmployeeOperation(employeeFieldsToUpdate);
 
         return employeeDtoUpdated;
+
     }
 
 
@@ -163,29 +153,6 @@ public class EmployeeService {
 
 
     }
-
-    /*private EmployeeDto createEmployeeWithNewFields (EmployeeDto employeeToUpdate, EmployeeDto employeeFieldsToUpdate ) throws IllegalArgumentException, IllegalAccessException {
-        
-        // use reflection to select not null fields to update
-        Field[] declaredFields = EmployeeDto.class.getDeclaredFields();
-
-        for (Field field : declaredFields) {
-            
-            field.setAccessible(true);
-
-            Object fieldValue = field.get(employeeFieldsToUpdate);
-
-            if (fieldValue != null && !field.getName().equalsIgnoreCase("Id")) {
-                
-                field.set(employeeToUpdate, fieldValue);
-
-            }
-
-        }
-
-        return employeeToUpdate;
-
-    }*/
 
 
 
