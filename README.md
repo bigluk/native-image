@@ -84,6 +84,8 @@ Let's take a look at the results achieved:
 ### Start up Time
 Let's start with the startup time. As you can see in the following image we have achieved a great result, reducing the startup time of 20 times!
 
+![Screenshot 2024-01-16 172507](https://github.com/bigluk/native-image/assets/133915457/51bb35a0-1194-42d7-81e0-1a15e21a2c3f)
+
 ### RAM
 Let's continue studying the RAM consumption, the following image demonstrate how the RAM consumption is decreased of 60%!
 
