@@ -89,6 +89,7 @@ Let's start with the startup time. As you can see in the following image we have
 ### RAM
 Let's continue studying the RAM consumption, the following image demonstrate how the RAM consumption is decreased of 60%!
 
+![Screenshot 2024-01-16 173142](https://github.com/bigluk/native-image/assets/133915457/08bd44ca-5938-4355-973d-c317bbeba4be)
 
 The last but not the least, let me show you a price comparison between the use of native executable and classic executable with Lambda AWS. The price showed in the next image are calculated using the online service called AWS calculator. The setting used for the stimation are: x86 lambda architecture, Milan Region, 1 milion request per month with 10 seconds of processing time on average, 512 MB of storage and 1000 MB for native executable and 1600 MB (1000 + 60%) obtained from the first point. Let's take a look at the image:
 
