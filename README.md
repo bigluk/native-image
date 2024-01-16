@@ -67,6 +67,8 @@ These three key concepts help you better understand the Native Image generation 
 What's interesting is that points-to analysis makes objects reachable in the image heap, and the snapshotting that builds the image heap can make new methods reachable for the points-to analysis. Thus, points-to analysis and heap snapshotting are performed iteratively until a fixed point is reached.
 The following image shows what is described in the previous three points.
 
+![image](https://github.com/bigluk/native-image/assets/133915457/2f557e3b-f4ae-4d51-a972-e620cb4dcbcb)
+
 ### Native Image Build Process
 After the analysis is complete, Graal compiles all the reachable code into a platform-specific native executable. That executable is fully functional on its own and doesn't need the JVM to run. As a result, you get a slim and fast native executable version of your Java application: one that performs the exact same functions but contains only the necessary code and its required dependencies.
 But who takes care of features such as memory management and thread scheduling in the native executable? For that, Native Image includes Substrate VM — a slim VM implementation that provides runtime components, such as a garbage collector and a thread scheduler. Just like the Graal compiler, Substrate VM is written in the Java programming language and AOT-compiled by GraalVM Native Image into native code!
