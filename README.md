@@ -93,6 +93,8 @@ Let's continue studying the RAM consumption, the following image demonstrate how
 
 The last but not the least, let me show you a price comparison between the use of native executable and classic executable with Lambda AWS. The price showed in the next image are calculated using the online service called AWS calculator. The setting used for the stimation are: x86 lambda architecture, Milan Region, 1 milion request per month with 10 seconds of processing time on average, 512 MB of storage and 1000 MB for native executable and 1600 MB (1000 + 60%) obtained from the first point. Let's take a look at the image:
 
+![Screenshot 2024-01-16 173359](https://github.com/bigluk/native-image/assets/133915457/f2b851c4-c6b2-472b-82a2-7678083dda9f)
+
 
 As we can see we reduced the cost of the lambda service considerably!
 
