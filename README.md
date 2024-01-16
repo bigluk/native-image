@@ -76,7 +76,7 @@ But who takes care of features such as memory management and thread scheduling i
 ## Practical Example
 After all this theory, let's get some practical example... The code used for the practice is the one on this GitHub repo. It was built a simple rest API with 4 endpoint for the CRUD operation and 1 "extra" endpoint used just to demostrate how to deal with reflection with native image.
 The technological stack used is springboot 3.2.1, java 17, maven and h2 as db.
-We have tried to use as much dependency and functionality as possibile to demonstrate how native is largely integrated with a pletora of dependencies.
+We have tried to use as much dependency and functionality as possibile to demonstrate how native is largely integrated with a lot of dependencies.
 Let's take a look at the results achieved:
 
 ### Start up Time
