@@ -1,6 +1,6 @@
 # native-image
 
-## Indice
+## Index
 
 1) Microservices Architecture and Cloud
 2) Cloud and serverless computing
